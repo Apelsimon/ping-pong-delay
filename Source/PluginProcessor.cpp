@@ -142,25 +142,29 @@ void PingpongDelayAudioProcessor::processBlock (AudioBuffer<float>& buffer, Midi
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-	const auto readDataL = buffer.getReadPointer(0);
-	const auto readDataR = buffer.getReadPointer(1);
-	auto writeDataL = buffer.getWritePointer(0);
-	auto writeDataR = buffer.getWritePointer(1);
-
-	for (auto sample = 0; sample < totNumSamples; ++sample)
+	for (auto channel = 0; channel < totalNumInputChannels; channel += 2)
 	{
-		const auto xnL = readDataL[sample];
-		const auto xnR = readDataR[sample];
-		const auto xnzL = delayLine.get(0);
-		const auto xnzR = delayLine.get(1);
-		
-		const auto inL = a * xnL + b * xnzR;
-		const auto inR = a * xnR + b * xnzL;
-		delayLine.put(0, inL);
-		delayLine.put(1, inR);
+		const auto otherChannel = (channel + 1) % totalNumInputChannels;
+		const auto readDataL = buffer.getReadPointer(channel);
+		const auto readDataR = buffer.getReadPointer(otherChannel);
+		auto writeDataL = buffer.getWritePointer(channel);
+		auto writeDataR = buffer.getWritePointer(otherChannel);
 
-		writeDataL[sample] = xnL + c * inL;
-		writeDataR[sample] = xnR + c * inR;
+		for (auto sample = 0; sample < totNumSamples; ++sample)
+		{
+			const auto xnL = readDataL[sample];
+			const auto xnR = readDataR[sample];
+			const auto xnzL = delayLine.get(channel);
+			const auto xnzR = delayLine.get(otherChannel);
+
+			const auto inL = a * xnL + b * xnzR;
+			const auto inR = a * xnR + b * xnzL;
+			delayLine.put(channel, inL);
+			delayLine.put(otherChannel, inR);
+
+			writeDataL[sample] = xnL + c * inL;
+			writeDataR[sample] = xnR + c * inR;
+		}
 	}
 
 }
