@@ -31,5 +31,13 @@ private:
     // access the processor object that created it.
     PingpongDelayAudioProcessor& processor;
 
+	Slider delayMs;
+	Slider dryMix1;
+	Slider dryMix2;
+	Slider wetMixB1;
+	Slider wetMixB2;
+	Slider wetMixC1;
+	Slider wetMixC2;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PingpongDelayAudioProcessorEditor)
 };

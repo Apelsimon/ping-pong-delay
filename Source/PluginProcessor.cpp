@@ -157,13 +157,13 @@ void PingpongDelayAudioProcessor::processBlock (AudioBuffer<float>& buffer, Midi
 			const auto xnzL = delayLine.get(channel);
 			const auto xnzR = delayLine.get(otherChannel);
 
-			const auto inL = a * xnL + b * xnzR;
-			const auto inR = a * xnR + b * xnzL;
+			const auto inL = dryMix1 * xnL + wetMixB1 * xnzR;
+			const auto inR = dryMix2 * xnR + wetMixB2 * xnzL;
 			delayLine.put(channel, inL);
 			delayLine.put(otherChannel, inR);
 
-			writeDataL[sample] = xnL + c * inL;
-			writeDataR[sample] = xnR + c * inR;
+			writeDataL[sample] = xnL + wetMixC1 * inL;
+			writeDataR[sample] = xnR + wetMixC2 * inR;
 		}
 	}
 

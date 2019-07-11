@@ -57,11 +57,24 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+	//==============================================================================
+
+	void setDry1(float dry)  { dryMix1 = dry; }
+	void setDry2(float dry) { dryMix2 = dry; }
+	void setWetB1(float wet) { wetMixB1 = wet; }
+	void setWetB2(float wet) { wetMixB2 = wet; }
+	void setWetC1(float wet) { wetMixC1 = wet; }
+	void setWetC2(float wet) { wetMixC2 = wet; }
+	void setDelay(float ms) { delayLine.setDelay(ms); }
+
 private:
     //==============================================================================
-	static constexpr float a = 0.8;
-	static constexpr float b = 0.8;
-	static constexpr float c = 0.8;
+	float dryMix1  = 0.5;
+	float dryMix2 = 0.5;
+	float wetMixB1 = 0.5;
+	float wetMixB2 = 0.5;
+	float wetMixC1 = 0.5;
+	float wetMixC2 = 0.5;
 
 	jos::Delayline<float> delayLine;
 
